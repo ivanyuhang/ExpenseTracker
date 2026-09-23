@@ -25,6 +25,17 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
+## Deploy to GitHub Pages
+
+The workflow in `.github/workflows/deploy-pages.yml` tests and exports the web app, then deploys it to GitHub Pages whenever `main` or `master` is pushed.
+
+1. Push this project to a GitHub repository.
+2. In the repository, open **Settings > Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+4. Open the **Actions** tab to follow the deployment.
+
+The production export automatically uses the repository name as its base URL, so project sites such as `https://username.github.io/ExpenseTracker/` load their scripts and images correctly. Repositories named `username.github.io` are deployed at the domain root instead.
+
 ## Get a fresh project
 
 When you're ready, run:
