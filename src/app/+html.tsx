@@ -19,6 +19,8 @@ export default function RootHtml({ children }: { children: ReactNode }) {
         <meta name="apple-mobile-web-app-title" content="Pocket Plan" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="format-detection" content="telephone=no" />
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+        <link rel="manifest" href="manifest.webmanifest" />
         <title>Pocket Plan</title>
         <ScrollViewStyleReset />
         {headNodes}
