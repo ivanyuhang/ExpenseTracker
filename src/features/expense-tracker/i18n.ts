@@ -4,7 +4,7 @@ export type Language = 'en' | 'zh-CN';
 
 const en = {
   monthlyMoney: 'MONTHLY MONEY', appName: 'Pocket Plan', dashboard: 'Dashboard', calendar: 'Calendar', addExpense: 'Add Expense', insights: 'Insights', settings: 'Settings',
-  language: 'Language', appearance: 'Appearance', english: 'English', chinese: '简体中文', light: 'Light', dark: 'Dark', system: 'System', followsDevice: 'Follows your device setting', settingsSubtitle: 'Personalize your tracker.',
+  language: 'Language', appearance: 'Appearance', english: 'English', chinese: '简体中文', light: 'Light', dark: 'Dark', system: 'System', followsDevice: 'Follows your device setting', settingsSubtitle: 'Personalize your tracker.', versionLabel: 'version 1.0',
   totalRemaining: 'TOTAL REMAINING', setYourBudgets: 'Set your budgets', editBudgets: 'Edit budgets', used: '{value}% used', noOverallLimit: 'No overall limit yet', ofBudget: '{spent} of {budget}',
   budget: 'BUDGET', spent: 'SPENT', remaining: 'REMAINING', categoryBudgets: 'Category budgets', thisMonth: 'This month', edit: 'Edit', noLimit: 'No limit', left: '{value} left', over: '{value} over', remainingLower: '{value} remaining', spentNoLimit: '{value} spent · no limit set',
   recentExpenses: 'Recent expenses', totalCount: '{count} total', firstExpense: 'Add your first expense to see it here.', delete: 'Delete', deleteExpense: 'Delete expense?', deleteConfirm: 'Are you sure you want to delete {title}?', cancel: 'Cancel',
@@ -25,7 +25,7 @@ const en = {
 
 const zh: Record<keyof typeof en, string> = {
   monthlyMoney: '每月收支', appName: '随身账本', dashboard: '总览', calendar: '日历', addExpense: '添加支出', insights: '洞察', settings: '设置',
-  language: '语言', appearance: '外观', english: 'English', chinese: '简体中文', light: '浅色', dark: '深色', system: '跟随系统', followsDevice: '自动跟随设备外观', settingsSubtitle: '个性化你的记账体验。',
+  language: '语言', appearance: '外观', english: 'English', chinese: '简体中文', light: '浅色', dark: '深色', system: '跟随系统', followsDevice: '自动跟随设备外观', settingsSubtitle: '个性化你的记账体验。', versionLabel: '版本 1.0',
   totalRemaining: '本月总余额', setYourBudgets: '设置预算', editBudgets: '编辑预算', used: '已使用 {value}%', noOverallLimit: '尚未设置总预算', ofBudget: '{spent} / {budget}',
   budget: '预算', spent: '已支出', remaining: '剩余', categoryBudgets: '分类预算', thisMonth: '本月', edit: '编辑', noLimit: '未设限额', left: '剩余 {value}', over: '超出 {value}', remainingLower: '剩余 {value}', spentNoLimit: '已支出 {value} · 未设限额',
   recentExpenses: '最近支出', totalCount: '共 {count} 笔', firstExpense: '添加第一笔支出后会显示在这里。', delete: '删除', deleteExpense: '删除支出？', deleteConfirm: '确定要删除“{title}”吗？', cancel: '取消',

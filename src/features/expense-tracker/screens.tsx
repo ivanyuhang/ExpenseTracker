@@ -593,6 +593,7 @@ export function SettingsScreen({ recurringRules, onDeleteRule, onEditRule, onTog
     </View>
     <Text style={styles.settingsHint}>{t('followsDevice')}</Text>
     <RecurringRulesSection rules={recurringRules} onDelete={onDeleteRule} onEdit={onEditRule} onToggle={onToggleRule} />
+    <Text style={styles.settingsVersion}>{t('versionLabel')}</Text>
   </>;
 }
 
