@@ -373,7 +373,7 @@ export function AddExpenseScreen({
       <Text style={styles.screenSubtitle}>{t(editing ? 'editSubtitle' : 'addSubtitle')}</Text>
       <View style={styles.formCard}>
         <Text style={styles.inputLabel}>{t('amount')}</Text>
-        <View style={styles.amountInputWrap}>
+        <View testID="pocket-plan-amount-wrap" style={styles.amountInputWrap}>
           <Text style={styles.amountPrefix}>¥</Text>
           <TextInput
             accessibilityLabel="Expense amount in yuan"
@@ -383,6 +383,7 @@ export function AddExpenseScreen({
             placeholder="0.00"
             placeholderTextColor={colors.placeholder}
             style={styles.amountInput}
+            testID="pocket-plan-amount-input"
             value={amount}
           />
         </View>
@@ -401,8 +402,8 @@ export function AddExpenseScreen({
         <Pressable accessibilityLabel={`${t('date')}, ${formatFullDate(date, locale)}`} onPress={() => setDatePickerOpen(true)} style={({ pressed }) => [styles.dateField, pressed && styles.buttonPressed]}>
           <View style={styles.dateIcon}><Text style={styles.dateIconText}>▦</Text></View>
           <View style={styles.dateFieldText}>
-            <Text style={styles.dateValue}>{formatFullDate(date, locale)}</Text>
-            <Text style={styles.dateHint}>{t('tapAnotherDate')}</Text>
+            <Text numberOfLines={1} style={styles.dateValue}>{formatFullDate(date, locale)}</Text>
+            <Text numberOfLines={1} style={styles.dateHint}>{t('tapAnotherDate')}</Text>
           </View>
           <Text style={styles.dateChevron}>›</Text>
         </Pressable>
@@ -434,7 +435,7 @@ export function AddExpenseScreen({
         <Text style={styles.inputLabel}>{t('repeat')}</Text>
         {recurrenceLocked ? <View style={styles.recurrenceLocked}><Text style={styles.recurrenceLockedText}>{t('singleOccurrenceHint')}</Text></View> : <RepeatSelector value={repeat} onChange={onRepeat} />}
         {!recurrenceLocked && repeat === 'custom' && <CustomRecurrence interval={repeatInterval} onInterval={onRepeatInterval} onUnit={onRepeatUnit} unit={repeatUnit} />}
-        {!recurrenceLocked && repeat !== 'never' && <><Text style={styles.inputLabel}>{t('endDate')} <Text style={styles.optional}>{t('optional')}</Text></Text><Pressable onPress={() => setEndDatePickerOpen(true)} style={styles.dateField}><View style={styles.dateIcon}><Text style={styles.dateIconText}>▦</Text></View><View style={styles.dateFieldText}><Text style={styles.dateValue}>{repeatEndDate ? formatFullDate(repeatEndDate, locale) : t('noEndDate')}</Text><Text style={styles.dateHint}>{t('tapEndDate')}</Text></View></Pressable>{!!repeatEndDate && <Pressable onPress={() => onRepeatEndDate('')} style={styles.clearEndButton}><Text style={styles.clearEndText}>{t('clearEndDate')}</Text></Pressable>}</>}
+        {!recurrenceLocked && repeat !== 'never' && <><Text style={styles.inputLabel}>{t('endDate')} <Text style={styles.optional}>{t('optional')}</Text></Text><Pressable onPress={() => setEndDatePickerOpen(true)} style={styles.dateField}><View style={styles.dateIcon}><Text style={styles.dateIconText}>▦</Text></View><View style={styles.dateFieldText}><Text numberOfLines={1} style={styles.dateValue}>{repeatEndDate ? formatFullDate(repeatEndDate, locale) : t('noEndDate')}</Text><Text numberOfLines={1} style={styles.dateHint}>{t('tapEndDate')}</Text></View></Pressable>{!!repeatEndDate && <Pressable onPress={() => onRepeatEndDate('')} style={styles.clearEndButton}><Text style={styles.clearEndText}>{t('clearEndDate')}</Text></Pressable>}</>}
         <Pressable disabled={saving} onPress={onAdd} style={({ pressed }) => [styles.saveButton, saving && styles.saveButtonDisabled, pressed && styles.buttonPressed]}>
           <Text style={styles.saveButtonText}>{saving ? t('saving') : editing ? t('saveChanges') : t('saveExpense')}</Text>
         </Pressable>

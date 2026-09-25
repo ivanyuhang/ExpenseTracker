@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -24,11 +23,9 @@ import {
   type MealType,
   monthKey,
   moveMonth,
-  normalizeSavedData,
   parseCurrencyInput,
   parseDateKey,
   removeExpense,
-  STORAGE_KEY,
   type Tab,
   toDateKey,
   totalExpenses,
@@ -42,6 +39,7 @@ import { DeleteRecurringRuleDialog, RecurringEditChoiceDialog } from './recurrin
 import { animateLayout, usePreferences } from './preferences';
 import { InsightsScreen } from './insights';
 import { AddExpenseScreen, CalendarScreen, DashboardScreen, SettingsScreen } from './screens';
+import { loadTrackerData, saveTrackerData } from './storage';
 
 export default function ExpenseTracker() {
   const { language, styles, t } = usePreferences();
@@ -90,15 +88,12 @@ export default function ExpenseTracker() {
   useEffect(() => {
     async function loadData() {
       try {
-        const saved = await AsyncStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const normalized = normalizeSavedData(JSON.parse(saved) as unknown);
-          if (normalized) {
-            setBudgets(normalized.budgets);
-            const materialized = materializeRecurringExpenses(normalized.expenses, normalized.recurringRules, toDateKey());
-            setExpenses(materialized.expenses);
-            setRecurringRules(materialized.rules);
-          }
+        const normalized = await loadTrackerData();
+        if (normalized) {
+          setBudgets(normalized.budgets);
+          const materialized = materializeRecurringExpenses(normalized.expenses, normalized.recurringRules, toDateKey());
+          setExpenses(materialized.expenses);
+          setRecurringRules(materialized.rules);
         }
       } catch {
         setStorageError(true);
@@ -127,10 +122,9 @@ export default function ExpenseTracker() {
 
   useEffect(() => {
     if (!ready) return;
-    const payload = JSON.stringify({ budget: budgets.total, budgets, expenses, recurringRules });
     const write = storageWriteQueue.current
       .catch(() => undefined)
-      .then(() => AsyncStorage.setItem(STORAGE_KEY, payload));
+      .then(() => saveTrackerData({ budgets, expenses, recurringRules }));
     storageWriteQueue.current = write;
     write
       .then(() => setStorageError(false))
@@ -353,12 +347,13 @@ export default function ExpenseTracker() {
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+    <SafeAreaView edges={Platform.OS === 'web' ? [] : ['top', 'bottom']} style={styles.safeArea}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <ScrollView
           contentContainerStyle={styles.page}
           keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
           keyboardShouldPersistTaps="handled"
+          style={styles.mainScroll}
           showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <View><Text style={styles.eyebrow}>{t('monthlyMoney')}</Text><Text style={styles.title}>{t('appName')}</Text></View>

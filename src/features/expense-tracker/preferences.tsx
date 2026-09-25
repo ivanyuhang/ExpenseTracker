@@ -1,9 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { AccessibilityInfo, LayoutAnimation, useColorScheme } from 'react-native';
 
 import { Language, TranslationKey, localeFor, translate } from './i18n';
 import { AppColors, appColors, createStyles } from './styles';
+import { loadPreferences, savePreferences } from './storage';
 
 export type ThemePreference = 'light' | 'dark' | 'system';
 
@@ -20,7 +20,6 @@ type PreferencesContextValue = {
   theme: ThemePreference;
 };
 
-const STORAGE_KEY = '@pocket-plan/preferences-v1';
 const PreferencesContext = createContext<PreferencesContextValue | null>(null);
 
 export function animateLayout() {
@@ -42,10 +41,9 @@ export function PreferencesProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     let active = true;
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then((stored) => {
-        if (!active || !stored) return;
-        const value = JSON.parse(stored) as Partial<{ language: Language; theme: ThemePreference }>;
+    loadPreferences()
+      .then((value) => {
+        if (!active || !value) return;
         if (value.language === 'en' || value.language === 'zh-CN') setLanguageState(value.language);
         if (value.theme === 'light' || value.theme === 'dark' || value.theme === 'system') setThemeState(value.theme);
       })
@@ -56,7 +54,7 @@ export function PreferencesProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     if (!loaded) return;
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ language, theme })).catch(() => undefined);
+    savePreferences({ language, theme }).catch(() => undefined);
   }, [language, loaded, theme]);
 
   const setLanguage = useCallback((nextLanguage: Language) => {
@@ -68,6 +66,22 @@ export function PreferencesProvider({ children }: PropsWithChildren) {
     setThemeState(nextTheme);
   }, []);
   const isDark = theme === 'dark' || (theme === 'system' && deviceScheme === 'dark');
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const background = isDark ? '#121116' : '#F7F6FB';
+    const navBackground = isDark ? '#1B1921' : '#FFFFFF';
+    const accent = isDark ? '#8C84FF' : '#635BFF';
+    document.documentElement.dataset.pocketPlanTheme = isDark ? 'dark' : 'light';
+    document.documentElement.style.setProperty('--pocket-plan-background', background);
+    document.documentElement.style.setProperty('--pocket-plan-nav-background', navBackground);
+    document.documentElement.style.setProperty('--pocket-plan-accent', accent);
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+    document.body.style.backgroundColor = navBackground;
+    document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+      meta.setAttribute('content', background);
+    });
+  }, [isDark]);
   const styles = useMemo(() => createStyles(isDark), [isDark]);
   const colors = useMemo(() => appColors(isDark), [isDark]);
   const t = useCallback(
